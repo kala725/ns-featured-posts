@@ -84,9 +84,10 @@ class NS_Featured_Posts_Admin
         add_action( 'admin_head', array( $this,'add_style_to_admin_head') );
         add_action( 'wp_ajax_nsfeatured_posts', array( $this, 'nsfp_ajax_featured_post' ) );
 
-        add_action( 'restrict_manage_posts', array( $this,'nsfp_table_filtering') );
-        add_filter( 'parse_query', array( $this,'nsfp_query_filtering') );
+        add_action( 'restrict_manage_posts', array( $this, 'nsfp_table_filtering' ) );
+        add_filter( 'parse_query', array( $this, 'nsfp_query_filtering' ) );
 
+        add_filter( 'pre_get_posts', array( $this, 'nsfp_filtering_query_for_listing' ) );
     }
 
     /**
@@ -378,10 +379,80 @@ class NS_Featured_Posts_Admin
 
             } // end if not empty
 
+            // for filter link
+            if ( isset($_GET['post_status']) && 'nsfp' == $_GET['post_status']  ) {
+                if ( isset($_GET['featured']) && 'yes' == $_GET['featured']  ) {
+
+                    $qv['meta_query'][] = array(
+                       'key' => '_is_ns_featured_post',
+                       'compare' => '=',
+                       'value' => 'yes',
+                    );
+
+                }
+            }
+
         } // end if
 
     }
 
+    /**
+     * Adding filtering link
+     */
+    function nsfp_filtering_query_for_listing( $wp_query ){
+
+        if( is_admin()) {
+            $allowed_posttypes = array();
+            foreach ( $this->options['nsfp_posttypes'] as $post_type => $val ) {
+                $allowed_posttypes[]= $post_type;
+            }
+            if ( ! empty( $allowed_posttypes ) ) {
+                foreach ( $allowed_posttypes as $val ) {
+                    add_filter( 'views_edit-' . $val, array( $this,
+                        'nsfp_add_views_link'
+                    ));
+                }
+            }
+        }
+    }
+
+    /**
+     * Adding views link
+     */
+    function nsfp_add_views_link( $views ){
+
+        $post_type = ( (isset($_GET['post_type']) && $_GET['post_type'] != "" ) ? $_GET['post_type'] : 'post');
+        $count = $this->get_total_featured_count($post_type);
+        $class = ( isset( $_GET['featured'] ) &&  $_GET['featured'] == 'yes' )  ? "current" : '';
+        $args = array(
+            'post_type'   => $post_type,
+            'post_status' => 'nsfp',
+            'featured'    => 'yes',
+            );
+        $url = esc_url( add_query_arg( $args,  admin_url('edit.php') ) );
+        $views['featured'] = '<a href="' . $url . '" class="' . $class . '" >'
+            .__('Featured','ns-featured-posts')
+            .'<span class="count">'
+            . ' ('.$count.') '
+            .'</span>'
+            .'</a>';
+
+        return $views;
+    }
+
+    /**
+     * Get total featured count
+     */
+    function get_total_featured_count( $post_type ){
+        $args = array(
+            'post_type'      => $post_type,
+            'posts_per_page' => -1,
+            'meta_key'       => '_is_ns_featured_post',
+            'meta_value'     => 'yes',
+        );
+        $postlist = get_posts( $args );
+        return count($postlist);
+    }
 
     /**
      * Register plugin settings

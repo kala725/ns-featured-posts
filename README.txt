@@ -1,7 +1,7 @@
 === NS Featured Posts ===
 Contributors: rabmalin
-Donate link: #
-Tags: post, custom post type, custom, posts, meta, plugin, featured
+Donate link: http://wordpress.org/plugins/ns-featured-posts/
+Tags: post, custom post type, custom, posts, meta, plugin, featured, featured-post
 Requires at least: 3.5.1
 Tested up to: 3.9.1
 Stable tag: 1.0.0
@@ -15,10 +15,10 @@ A plugin for making posts, pages or custom post types featured. User can enable/
 <h3>NS Featured Posts</h3>This plugin add checkbox for each list item. You can easily check /  uncheck the Featured. Checking the Featured will set the meta value 'yes' for meta key '_is_ns_featured_post'. From plugin settings, you can choose to which post types you want Featured functionality.
 
 = Using in theme =
-This plugin only set / unset the meta key for asigned post. You need to implement it in your theme to get Featured functionality.      
+This plugin only set / unset the meta key for asigned post. You need to implement it in your theme to get Featured functionality.
 
-Example:    
-$query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value' => 'yes' ) );    
+Example:
+$query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value' => 'yes' ) );
 This is fetch the list of post which are  checked as Featured.
 
 
