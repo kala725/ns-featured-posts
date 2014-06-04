@@ -17,8 +17,8 @@ A plugin for making posts, pages or custom post types featured. User can enable/
 = Using in theme =
 This plugin only set / unset the meta key for asigned post. You need to implement it in your theme to get Featured functionality.      
 
-Example:
-$query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value' => 'yes' ) );
+Example:    
+$query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value' => 'yes' ) );    
 This is fetch the list of post which are  checked as Featured.
 
 
