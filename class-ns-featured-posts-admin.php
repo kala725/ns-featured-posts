@@ -356,8 +356,9 @@ class NS_Featured_Posts_Admin
 
         global $pagenow;
         $qv = &$query->query_vars;
-        $qv['meta_query'] = array();
         if ( is_admin() && $pagenow == 'edit.php'){
+
+            $qv['meta_query'] = array();
 
             if( !empty( $_GET['filter-ns-featured-posts'] ) ) {
 
