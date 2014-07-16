@@ -42,6 +42,9 @@
               <a href="http://wordpress.org/plugins/admin-customizer/" target="_blank">Admin Customizer</a>
             </p>
             <p>
+              <a href="http://wordpress.org/plugins/really-simple-image-widget/" target="_blank">Really Simple Image Widget</a>
+            </p>
+            <p>
               <a href="http://wordpress.org/plugins/ns-category-widget/" target="_blank">NS Category Widget</a>
             </p>
             <p>

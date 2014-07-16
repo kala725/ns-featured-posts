@@ -1,5 +1,5 @@
 <?php
-
+require_once(plugin_dir_path( __FILE__ ) . 'widgets/nsfp-featured-post-widget.php');
 /**
  * NS Featured Posts
  *
@@ -88,6 +88,8 @@ class NS_Featured_Posts_Admin
         add_filter( 'parse_query', array( $this, 'nsfp_query_filtering' ) );
 
         add_filter( 'pre_get_posts', array( $this, 'nsfp_filtering_query_for_listing' ) );
+
+        add_action( 'widgets_init', array( $this, 'nsfp_custom_widgets' ) );
     }
 
     /**
@@ -453,6 +455,13 @@ class NS_Featured_Posts_Admin
         );
         $postlist = get_posts( $args );
         return count($postlist);
+    }
+
+    /**
+     * NSFP Widgets
+     */
+    function nsfp_custom_widgets(){
+        register_widget( 'NSFP_Featured_Post_Widget' );
     }
 
     /**

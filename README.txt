@@ -4,7 +4,7 @@ Donate link: http://wordpress.org/plugins/ns-featured-posts/
 Tags: post, custom post type, custom, posts, meta, plugin, featured, featured-post
 Requires at least: 3.5.1
 Tested up to: 3.9.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,7 +19,7 @@ This plugin only set / unset the meta key for asigned post. You need to implemen
 
 Example:
 $query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value' => 'yes' ) );
-This is fetch the list of post which are  checked as Featured.
+This will fetch the list of post which are checked as Featured.
 
 
 == Installation ==
@@ -30,12 +30,14 @@ This is fetch the list of post which are  checked as Featured.
 1. Select 'ns-featured-posts.zip' from your computer
 1. Upload
 1. Activate the plugin on the WordPress Plugin Dashboard
+1. Place the 'NS Featured Posts Widget' into a Widget area through the 'Appearance -> Widgets' menu in WordPress.
 
 = Using FTP =
 
 1. Extract 'ns-featured-posts.zip' to your computer
 1. Upload the 'ns-featured-posts' directory to your 'wp-content/plugins' directory
 1. Activate the plugin on the WordPress Plugins dashboard
+1. Place the 'NS Featured Posts Widget' into a Widget area through the 'Appearance -> Widgets' menu in WordPress.
 
 
 == Frequently Asked Questions ==
@@ -50,6 +52,10 @@ Nice, make a post on the [Support Forum](http://wordpress.org/support/plugin/ns-
 2. Example of featured in Post listing
 
 == Changelog ==
+
+= 1.0.1 =
+* Add Featured Posts Widget
+* Bug fixes
 
 = 1.0.0 =
 * Initial release
