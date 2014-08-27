@@ -22,7 +22,7 @@ $query = new WP_Query( array( 'meta_key' => '_is_ns_featured_post', 'meta_value'
 This will fetch the list of post which are checked as Featured.
 
 **Want to see how this can be used in a Page Template?**
-[Click this link](https://gist.github.com/ernilambar/eac35eb657090630c4cc)
+[Click this link to see example](https://gist.github.com/ernilambar/eac35eb657090630c4cc)
 
 
 == Installation ==
