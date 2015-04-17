@@ -26,7 +26,7 @@ class NS_Featured_Posts
      * @var     string
      */
 
-    const VERSION = '1.0.2';
+    const VERSION = '1.1';
 
     /**
      * Unique identifier for your plugin.
@@ -79,16 +79,16 @@ class NS_Featured_Posts
         add_action('wpmu_new_blog', array($this, 'activate_new_site'));
 
         // Load public-facing style sheet and JavaScript.
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
+        // add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 
         self :: $default_options = array(
             'nsfp_posttypes' => array('post' => 1),
         );
 
-		$this -> _setDefaultOptions();
+    		$this -> _setDefaultOptions();
 
-		//get current options
+    		//get current options
         $this->_getCurrentOptions();
 
     }

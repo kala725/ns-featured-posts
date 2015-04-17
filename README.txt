@@ -4,7 +4,7 @@ Donate link: http://wordpress.org/plugins/ns-featured-posts/
 Tags: post, custom post type, custom, posts, meta, plugin, featured, featured-post
 Requires at least: 3.5.1
 Tested up to: 4.0
-Stable tag: 1.0.2
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,11 @@ Nice, make a post on the [Support Forum](http://wordpress.org/support/plugin/ns-
 2. Example of featured in Post listing
 
 == Changelog ==
+
+= 1.1 =
+* New: Metabox added in edit screen to enable/disable featured
+* Fix: Minor Bug fixes
+* Compatibility: Compatibility check with WP 4.2
 
 = 1.0.2 =
 * Bug fixes

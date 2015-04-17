@@ -35,23 +35,32 @@
         <div class="inside">
             <h4>WordPress Theme</h4>
              <p>
-               <a href="http://wordpress.org/themes/blue-planet" target="_blank">Blue Planet</a>
+               <a href="http://wordpress.org/themes/blue-planet/" target="_blank">Blue Planet</a>
+             </p>
+             <p>
+               <a href="http://wordpress.org/themes/simple-life/" target="_blank">Simple Life</a>
              </p>
             <h4>WordPress Plugins</h4>
             <p>
-              <a href="http://wordpress.org/plugins/admin-customizer/" target="_blank">Admin Customizer</a>
+              <a href="http://wordpress.org/plugins/admin-customizer" target="_blank">Admin Customizer</a>
             </p>
             <p>
-              <a href="http://wordpress.org/plugins/really-simple-image-widget/" target="_blank">Really Simple Image Widget</a>
+              <a href="http://wordpress.org/plugins/really-simple-image-widget" target="_blank">Really Simple Image Widget</a>
             </p>
             <p>
-              <a href="http://wordpress.org/plugins/ns-category-widget/" target="_blank">NS Category Widget</a>
+              <a href="http://wordpress.org/plugins/ns-category-widget" target="_blank">NS Category Widget</a>
             </p>
             <p>
-              <a href="http://wordpress.org/plugins/ns-comment-validator/" target="_blank">NS Comment Validator</a>
+              <a href="https://wordpress.org/support/plugin/woocommerce-product-tabs" target="_blank">Woocommerce Product Tabs</a>
             </p>
             <p>
-              <a href="http://wordpress.org/plugins/date-today-nepali/" target="_blank">Date Today Nepali</a>
+              <a href="http://wordpress.org/plugins/source-affix" target="_blank">Source Affix</a>
+            </p>
+            <p>
+              <a href="http://wordpress.org/plugins/ns-comment-validator" target="_blank">NS Comment Validator</a>
+            </p>
+            <p>
+              <a href="http://wordpress.org/plugins/date-today-nepali" target="_blank">Date Today Nepali</a>
             </p>
         </div> <!-- .inside -->
 

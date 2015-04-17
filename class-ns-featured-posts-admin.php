@@ -37,7 +37,7 @@ class NS_Featured_Posts_Admin
      */
     protected $plugin_screen_hook_suffix = null;
 
-	protected $options = array();
+  	protected $options = array();
 
 
 
@@ -57,12 +57,12 @@ class NS_Featured_Posts_Admin
          */
         $plugin = NS_Featured_Posts::get_instance();
         $this->plugin_slug = $plugin->get_plugin_slug();
-		$this->options = $plugin->ns_featured_posts_get_options_array();
+    		$this->options = $plugin->ns_featured_posts_get_options_array();
 
 
         // Load admin style sheet and JavaScript.
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
-        add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
+        // add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
+        // add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 
         // Add the options page and menu item.
         add_action('admin_menu', array($this, 'ns_featured_posts_add_plugin_admin_menu'));
@@ -90,6 +90,11 @@ class NS_Featured_Posts_Admin
         add_filter( 'pre_get_posts', array( $this, 'nsfp_filtering_query_for_listing' ) );
 
         add_action( 'widgets_init', array( $this, 'nsfp_custom_widgets' ) );
+
+        // Metabox stuffs
+        add_action( 'add_meta_boxes', array( $this, 'add_featured_meta_boxes' ) );
+        add_action( 'save_post', array( $this, 'nsfp_save_meta_box' ) );
+
     }
 
     /**
@@ -232,14 +237,13 @@ class NS_Featured_Posts_Admin
      */
     function add_featured_column_content( $column, $id ){
         if ( $column == 'ns_featured_posts_col' ){
-            $class = '';
-            $ns_featured = get_post_meta( $id, '_is_ns_featured_post', true );
-            // print_r($ns_featured);
-            $classes = array('ns_featured_posts_icon');
-            if ('yes' == $ns_featured) {
-                $classes[] = 'selected';
-            }
-            echo  '<a id="btn-post-featured_'.$id.'" class="'.implode(' ', $classes).'"></a>';
+          $class = '';
+          $ns_featured = get_post_meta( $id, '_is_ns_featured_post', true );
+          $classes = array('ns_featured_posts_icon');
+          if ('yes' == $ns_featured) {
+              $classes[] = 'selected';
+          }
+          echo  '<a id="btn-post-featured_'.$id.'" class="'.implode(' ', $classes).'"></a>';
         }
     }
 
@@ -327,6 +331,90 @@ class NS_Featured_Posts_Admin
         <?php
     }
 
+    /**
+     * Add meta box in posts.
+     *
+     * @since    1.1
+     */
+    function add_featured_meta_boxes(){
+
+      global $typenow;
+      $allowed = array();
+      foreach ( $this->options['nsfp_posttypes'] as $post_type => $val ) {
+          $allowed[] = $post_type;
+      }
+      if ( ! in_array($typenow,  $allowed )  ) {
+          return;
+      }
+      $screens = $allowed;
+      foreach ( $screens as $screen ) {
+        add_meta_box(
+          'nsfp_meta_box_featured',
+          __( 'Featured', 'ns-featured-posts' ),
+          array( $this, 'nsfp_meta_box_featured_callback' ),
+          $screen,
+          'side'
+        );
+      }
+
+    }
+
+    /**
+     * Featured meta box callback.
+     *
+     * @since    1.0.0
+     */
+    function nsfp_meta_box_featured_callback( $post ){
+
+      $is_ns_featured_post = get_post_meta( $post->ID, '_is_ns_featured_post', true );
+
+      wp_nonce_field( plugin_basename( __FILE__ ), 'nsfp_featured_metabox_nonce' );
+      ?>
+      <p>
+      <input type="hidden" name="nsfp_settings[make_this_featured]" value="0" />
+      <input type="checkbox" name="nsfp_settings[make_this_featured]" value="yes" <?php checked( $is_ns_featured_post, 'yes', true); ?> />
+      <span class="small"><?php _e( 'Check this to make this post featured.', 'wen-logo-slider' ); ?></span>
+      </p>
+      <?php
+
+    }
+
+    function nsfp_save_meta_box( $post_id ){
+
+      $allowed = array();
+      foreach ( $this->options['nsfp_posttypes'] as $post_type => $val ) {
+        $allowed[] = $post_type;
+      }
+      if ( ! in_array( get_post_type( $post_id ),  $allowed )  ) {
+        return $post_id;
+      }
+
+      // Bail if we're doing an auto save
+      if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+
+      // if our nonce isn't there, or we can't verify it, bail
+      if ( ! isset( $_POST['nsfp_featured_metabox_nonce'] ) || ! wp_verify_nonce( $_POST['nsfp_featured_metabox_nonce'], plugin_basename( __FILE__ ) ) )
+          return $post_id;
+
+      // if our current user can't edit this post, bail
+      if( ! current_user_can( 'edit_post' , $post_id ) )
+        return $post_id;
+
+      $featured_value = '';
+      if ( isset( $_POST['nsfp_settings']['make_this_featured'] ) && 'yes' == $_POST['nsfp_settings']['make_this_featured'] ) {
+        $featured_value = 'yes';
+      }
+      if ( 'yes' == $featured_value ) {
+        update_post_meta( $post_id, '_is_ns_featured_post', $featured_value );
+      }
+      else{
+        delete_post_meta( $post_id, '_is_ns_featured_post' );
+      }
+      return $post_id;
+
+    }
+
+
 
     /**
      * Filtering dropdown in the post listing.
@@ -339,7 +427,7 @@ class NS_Featured_Posts_Admin
         foreach ( $this->options['nsfp_posttypes'] as $post_type => $val ) {
             $allowed[]= $post_type;
         }
-        if ( !in_array($typenow,  $allowed )  ) {
+        if ( ! in_array($typenow,  $allowed )  ) {
             return;
         }
         echo '<select name="filter-ns-featured-posts" id="filter-ns-featured-posts">';
@@ -360,7 +448,9 @@ class NS_Featured_Posts_Admin
         $qv = &$query->query_vars;
         if ( is_admin() && $pagenow == 'edit.php'){
 
-            $qv['meta_query'] = array();
+            if ( ! isset( $qv['meta_query'] ) ) {
+              $qv['meta_query'] = array();
+            }
 
             if( !empty( $_GET['filter-ns-featured-posts'] ) ) {
 
@@ -469,17 +559,20 @@ class NS_Featured_Posts_Admin
      */
     public function plugin_register_settings()
     {
-        register_setting('nsfp-plugin-options-group', 'nsfp_plugin_options', array( $this, 'ns_featured_posts_plugin_options_validate') );
+      register_setting('nsfp-plugin-options-group', 'nsfp_plugin_options', array( $this, 'ns_featured_posts_plugin_options_validate') );
 
-		add_settings_section('main_settings', __( 'NS Featured Posts Settings', 'ns-featured-posts' ) , array($this, 'ns_featured_posts_plugin_section_text_callback'), 'ns-featured-posts-main');
+  		add_settings_section('main_settings', __( 'NS Featured Posts Settings', 'ns-featured-posts' ) , array($this, 'ns_featured_posts_plugin_section_text_callback'), 'ns-featured-posts-main');
 
-		add_settings_field('nsfp_posttypes', __( 'Enabled Featured for', 'ns-featured-posts' ), array($this, 'nsfp_posttypes_callback'), 'ns-featured-posts-main', 'main_settings');
+  		add_settings_field('nsfp_posttypes', __( 'Enabled Featured for', 'ns-featured-posts' ), array($this, 'nsfp_posttypes_callback'), 'ns-featured-posts-main', 'main_settings');
 
 
     }
 	// validate our options
 	function ns_featured_posts_plugin_options_validate($input) {
 
+    if ( ! isset( $input['nsfp_posttypes'] ) ) {
+      $input['nsfp_posttypes'] = array();
+    }
 		return $input;
 	}
 

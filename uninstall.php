@@ -2,7 +2,7 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * @package   Source_Affix
+ * @package   NS_Featured_Posts
  * @author    Nilambar Sharma<nilambar@outlook.com>
  * @license   GPL-2.0+
  * @link      http://nilambar.net
@@ -15,4 +15,4 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 //Define uninstall functionality here
-delete_option('nsfp_plugin_options');
+delete_option( 'nsfp_plugin_options' );
