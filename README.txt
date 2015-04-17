@@ -2,7 +2,7 @@
 Contributors: rabmalin
 Donate link: http://wordpress.org/plugins/ns-featured-posts/
 Tags: post, custom post type, custom, posts, meta, plugin, featured, featured-post
-Requires at least: 3.5.1
+Requires at least: 3.8
 Tested up to: 4.2
 Stable tag: 1.1
 License: GPLv2 or later
