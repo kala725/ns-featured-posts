@@ -239,11 +239,13 @@ class NS_Featured_Posts_Admin
         if ( $column == 'ns_featured_posts_col' ){
           $class = '';
           $ns_featured = get_post_meta( $id, '_is_ns_featured_post', true );
+          $ns_featured_rank = get_post_meta( $id, '_ns_featured_post_rank', true );
           $classes = array('ns_featured_posts_icon');
           if ('yes' == $ns_featured) {
               $classes[] = 'selected';
           }
-          echo  '<a id="btn-post-featured_'.$id.'" class="'.implode(' ', $classes).'"></a>';
+          echo  '<a id="btn-post-featured_'.$id.'" class="'.implode(' ', $classes).'"></a>
+                <p><span>Post Rank: '.$ns_featured_rank.'</span></p>';
         }
     }
 
@@ -255,12 +257,19 @@ class NS_Featured_Posts_Admin
     function nsfp_ajax_featured_post(){
         $ns_featured = $_POST['ns_featured'];
         $id = (int)$_POST['post'];
+        $ns_featured_post_rank = get_post_meta( $id, '_ns_featured_post_rank', true );
+
+        if(empty($ns_featured_post_rank))
+            $ns_featured_post_rank = 1;
+
         if( !empty( $id ) && $ns_featured !== NULL ) {
             if ( $ns_featured == 'no' ){
                 delete_post_meta( $id, "_is_ns_featured_post" );
+                delete_post_meta( $id, "_ns_featured_post_rank" );
             }
             else {
                 update_post_meta( $id, "_is_ns_featured_post", 'yes' );
+                update_post_meta( $id, "_ns_featured_post_rank", $ns_featured_post_rank );
             }
         }
         wp_send_json_success();
@@ -367,13 +376,17 @@ class NS_Featured_Posts_Admin
     function nsfp_meta_box_featured_callback( $post ){
 
       $is_ns_featured_post = get_post_meta( $post->ID, '_is_ns_featured_post', true );
-
+      $ns_featured_post_rank = get_post_meta( $post->ID, '_ns_featured_post_rank', true );
       wp_nonce_field( plugin_basename( __FILE__ ), 'nsfp_featured_metabox_nonce' );
       ?>
       <p>
       <input type="hidden" name="nsfp_settings[make_this_featured]" value="0" />
       <input type="checkbox" name="nsfp_settings[make_this_featured]" value="yes" <?php checked( $is_ns_featured_post, 'yes', true); ?> />
       <span class="small"><?php _e( 'Check this to make this post featured.', 'wen-logo-slider' ); ?></span>
+      </p>
+      <p>
+        <span class="small"><?php _e( 'You can configure the post rank here.', 'wen-logo-slider' ); ?></span>
+        <input type="number" name="nsfp_settings[make_this_featured_rank]" value="<?php echo $ns_featured_post_rank ?>" max="100" min="1" />
       </p>
       <?php
 
@@ -403,12 +416,19 @@ class NS_Featured_Posts_Admin
       $featured_value = '';
       if ( isset( $_POST['nsfp_settings']['make_this_featured'] ) && 'yes' == $_POST['nsfp_settings']['make_this_featured'] ) {
         $featured_value = 'yes';
-      }
+        }
+
+    $ns_featured_post_rank = $_POST['nsfp_settings']['make_this_featured_rank'];
+    if(empty($ns_featured_post_rank))
+        $ns_featured_post_rank = 1;
+
       if ( 'yes' == $featured_value ) {
         update_post_meta( $post_id, '_is_ns_featured_post', $featured_value );
+        update_post_meta( $post_id, '_ns_featured_post_rank', $ns_featured_post_rank );
       }
       else{
         delete_post_meta( $post_id, '_is_ns_featured_post' );
+        delete_post_meta( $post_id, '_ns_featured_post_rank' );
       }
       return $post_id;
 
